@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "618159936601",
+    "firebase_url": "https://case-7-10506-default-rtdb.europe-west1.firebasedatabase.app",
+    "project_id": "case-7-10506",
+    "storage_bucket": "case-7-10506.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:618159936601:android:b9473ca1d85d2399638d48",
+        "android_client_info": {
+          "package_name": "com.dancetogether.test"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "618159936601-bdtlu9bpjkkeg1a5atelqp14rg1mqnja.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBnIXiF1dr5Ud4WbRMKNlZA34Nkap6916E"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "618159936601-bdtlu9bpjkkeg1a5atelqp14rg1mqnja.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
