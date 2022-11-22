@@ -7,5 +7,5 @@ PizzaPitch</br></br>
 login: s@mail.ru</br>
 password: 1234567890</br>
 Аккаунт препода с заполненной бд:</br>
-login: maksim@mail.ru
+login: maksim@mail.ru</br>
 password: 1234567890</br>
