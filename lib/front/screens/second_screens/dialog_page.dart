@@ -1,20 +1,23 @@
 import 'dart:io';
 
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:hakaton_case_7/back/send_message.dart';
 import 'package:hakaton_case_7/back/upload_picture.dart';
 import 'package:hakaton_case_7/back/utils.dart';
 import 'package:hakaton_case_7/back/pick_image.dart';
+import 'package:hakaton_case_7/front/screens/second_screens/info_user_page.dart';
 import 'package:hakaton_case_7/front/screens/second_screens/message_page.dart';
 import 'package:hakaton_case_7/front/theme/colors.dart';
+// ignore: depend_on_referenced_packages
 import 'package:image_picker/image_picker.dart';
 import 'dart:math' as math;
 
 class DialogPage extends StatelessWidget {
   final TextEditingController _controller = TextEditingController();
   final String withUser;
-  DialogPage({Key? key, required this.withUser}) : super(key: key);
+  final Map user;
+  DialogPage({Key? key, required this.withUser, required this.user})
+      : super(key: key);
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -25,81 +28,90 @@ class DialogPage extends StatelessWidget {
               width: MediaQuery.of(context).size.width,
               height: 100,
               color: Colors.white,
-              child: StreamBuilder(
-                  stream: FirebaseFirestore.instance
-                      .collection('users')
-                      .doc(withUser)
-                      .snapshots(),
-                  builder: (BuildContext context,
-                      AsyncSnapshot<DocumentSnapshot> snapshot) {
-                    if (snapshot.hasData && snapshot.data!.data() != null) {
-                      final Map<String, dynamic> data =
-                          snapshot.data!.data() as Map<String, dynamic>;
-                      return Row(
-                        children: [
-                          TextButton(
-                              onPressed: () => Navigator.pop(context),
-                              child: Icon(
-                                Icons.arrow_back,
-                                color: CustomColors.indigo,
-                              )),
-                          Stack(children: [
-                            Container(
+              child: Row(
+                mainAxisSize: MainAxisSize.max,
+                children: [
+                  TextButton(
+                      onPressed: () => Navigator.pop(context),
+                      child: Icon(
+                        Icons.arrow_back,
+                        color: CustomColors.indigo,
+                      )),
+                  TextButton(
+                    style: ButtonStyle(
+                      padding: MaterialStateProperty.all<EdgeInsets>(
+                          const EdgeInsets.all(0)),
+                    ),
+                    onPressed: () => Navigator.push(
+                        context,
+                        PageRouteBuilder(
+                          pageBuilder: (context, animation1, animation2) =>
+                              InfoUserPage(user: user, userId: withUser),
+                          transitionDuration: Duration.zero,
+                          reverseTransitionDuration: Duration.zero,
+                        )),
+                    child: Row(children: [
+                      Stack(children: [
+                        user['ava'] == null
+                            ? Container(
+                                width: 44,
+                                height: 44.0,
+                                decoration: BoxDecoration(
+                                    shape: BoxShape.circle,
+                                    color: CustomColors.wgrey))
+                            : Container(
                                 width: 44,
                                 height: 44.0,
                                 decoration: BoxDecoration(
                                     shape: BoxShape.circle,
                                     image: DecorationImage(
                                         fit: BoxFit.cover,
-                                        image: NetworkImage(data['ava'])))),
-                            Padding(
-                              padding: const EdgeInsets.only(left: 34, top: 32),
-                              child: Container(
-                                height: 8,
-                                width: 8,
-                                decoration: BoxDecoration(
-                                    borderRadius: const BorderRadius.all(
-                                        Radius.circular(4)),
-                                    color: data['online']
-                                        ? CustomColors.orange
-                                        : Colors.grey),
-                              ),
-                            )
-                          ]),
-                          const SizedBox(
-                            width: 12,
+                                        image: NetworkImage(user['ava'])))),
+                        Padding(
+                          padding: const EdgeInsets.only(left: 34, top: 32),
+                          child: Container(
+                            height: 8,
+                            width: 8,
+                            decoration: BoxDecoration(
+                                borderRadius:
+                                    const BorderRadius.all(Radius.circular(4)),
+                                color: true //TODO: online
+                                    ? CustomColors.orange
+                                    // ignore: dead_code
+                                    : Colors.grey),
                           ),
-                          Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              const SizedBox(
-                                height: 5,
-                              ),
-                              Text(
-                                data['name'] + ' ' + data['surname'],
-                                style: TextStyle(
-                                    color: CustomColors.indigo,
-                                    fontSize: 20,
-                                    fontWeight: FontWeight.normal),
-                              ),
-                              Text(
-                                data['online'] ? "в сети" : "не в сети",
-                                style: TextStyle(
-                                    color: CustomColors.gray,
-                                    fontSize: 12,
-                                    fontWeight: FontWeight.bold),
-                              )
-                            ],
+                        )
+                      ]),
+                      const SizedBox(
+                        width: 12,
+                      ),
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          const SizedBox(
+                            height: 5,
+                          ),
+                          Text(
+                            user['name'] + ' ' + user['surname'],
+                            style: TextStyle(
+                                color: CustomColors.indigo,
+                                fontSize: 20,
+                                fontWeight: FontWeight.normal),
+                          ),
+                          Text(
+                            // ignore: dead_code
+                            true ? "в сети" : "не в сети", //TODO: online
+                            style: TextStyle(
+                                color: CustomColors.gray,
+                                fontSize: 12,
+                                fontWeight: FontWeight.bold),
                           )
                         ],
-                      );
-                    } else {
-                      return const SizedBox(
-                        height: 44,
-                        width: 44,
-                      );
-                    }
-                  }),
+                      )
+                    ]),
+                  )
+                ],
+              ),
             ),
             MessagePage(withUser: withUser),
           ]),
@@ -117,6 +129,7 @@ class DialogPage extends StatelessWidget {
                         const EdgeInsets.all(0))),
                 onPressed: () async {
                   var images = await imagePicker();
+                  // ignore: use_build_context_synchronously
                   if (images != null) checkImage(context, images);
                 },
                 child: Transform.rotate(

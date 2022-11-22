@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:hakaton_case_7/back/send_message.dart';
 import 'package:hakaton_case_7/back/utils.dart';
+// ignore: depend_on_referenced_packages
 import 'package:intl/intl.dart';
 
 class MessagePage extends StatelessWidget {
@@ -218,7 +219,6 @@ class MessagePage extends StatelessWidget {
                 )),
             next
                 ? Align(
-                    //TODO: Разобраться со временем, кинуть его вправо
                     alignment: Alignment.bottomLeft,
                     child: Text(DateFormat('HH:mm')
                         .format(DateTime.fromMillisecondsSinceEpoch(

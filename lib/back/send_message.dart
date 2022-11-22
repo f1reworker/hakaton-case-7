@@ -1,5 +1,27 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
+Future createDialog(
+  String toUser,
+  String fromUser,
+) async {
+  FirebaseFirestore.instance
+      .collection('chats$fromUser')
+      .doc(toUser)
+      .get()
+      .then((value) {
+    if (value.data() == null) {
+      FirebaseFirestore.instance
+          .collection('chats$fromUser')
+          .doc(toUser)
+          .set({});
+      FirebaseFirestore.instance
+          .collection('chats$toUser')
+          .doc(fromUser)
+          .set({});
+    }
+  });
+}
+
 Future sendMessage(
   String toUser,
   String fromUser,

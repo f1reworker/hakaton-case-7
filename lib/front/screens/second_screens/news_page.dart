@@ -130,22 +130,6 @@ class _NewsPageState extends State<NewsPage> {
             ),
           ),
           SizedBox(
-            height: 64,
-            child: ListView.builder(
-                itemCount: 15,
-                scrollDirection: Axis.horizontal,
-                shrinkWrap: true,
-                itemBuilder: (BuildContext context, int index) => Container(
-                      margin: const EdgeInsets.all(3),
-                      height: 58,
-                      width: 58,
-                      decoration: BoxDecoration(
-                          borderRadius:
-                              const BorderRadius.all(Radius.circular(29)),
-                          color: CustomColors.gray),
-                    )),
-          ),
-          SizedBox(
             height: MediaQuery.of(context).size.height - 232,
             child: ListView.builder(
                 physics: const BouncingScrollPhysics(),

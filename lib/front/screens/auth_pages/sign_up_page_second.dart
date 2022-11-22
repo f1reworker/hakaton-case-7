@@ -171,9 +171,9 @@ class _SignUpPageSecondState extends State<SignUpPageSecond> {
                           ),
                         )),
                     if (widget.isChild)
-                      buildInputText(_parentController, 'ФИО родителя')
+                      buildInputText(_parentController, 'email родителя')
                     else
-                      buildInputText(_parentController, 'ФИО ребенка'),
+                      buildInputText(_parentController, 'email ребенка'),
                     buildInputText(_emailController, 'Email'),
                     buildInputText(_passwordController, 'Пароль'),
                     const SizedBox(
@@ -195,7 +195,7 @@ class _SignUpPageSecondState extends State<SignUpPageSecond> {
                                     widget.isChild ? 'Child' : 'Parent');
                                 Utils.userId = value;
                                 Utils.type =
-                                    widget.isChild ? 'Child' : 'Parent';
+                                    widget.isChild ? 'child' : 'parent';
                                 // ignore: use_build_context_synchronously
                                 Navigator.pushReplacement(
                                     context,
