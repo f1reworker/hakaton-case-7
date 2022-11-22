@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_database/firebase_database.dart';
 import 'package:hakaton_case_7/back/send_message.dart';
 import 'package:hakaton_case_7/back/upload_picture.dart';
 // ignore: depend_on_referenced_packages
@@ -38,19 +39,16 @@ Future register(
         null,
         'Отвечу на все интересующие Вас вопросы',
         (DateTime.now().millisecondsSinceEpoch / 1000).ceil());
-    await FirebaseFirestore.instance
-        .collection('users')
-        .doc(result.user!.uid)
-        .set({
+    await FirebaseDatabase.instance.ref('users/${result.user!.uid}').set({
       'age': age,
       'ava': linkAv,
       'email': login,
       'name': name,
-      'online': true,
       'relative': relative,
       'school': school,
       'surname': surname,
-      'type': type
+      'type': type,
+      'group': null
     });
     await FirebaseFirestore.instance
         .collection('currency')

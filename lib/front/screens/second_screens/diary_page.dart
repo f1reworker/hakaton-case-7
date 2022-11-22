@@ -5,6 +5,8 @@ import 'package:hakaton_case_7/back/utils.dart';
 import 'package:hakaton_case_7/front/screens/first_screens/main_page.dart';
 import 'package:hakaton_case_7/front/theme/colors.dart';
 import 'package:hakaton_case_7/front/theme/my_todo_icons.dart';
+// ignore: depend_on_referenced_packages
+import 'package:intl/intl.dart';
 
 class DiaryPage extends StatefulWidget {
   const DiaryPage({Key? key}) : super(key: key);
@@ -15,9 +17,6 @@ class DiaryPage extends StatefulWidget {
 
 class _DiaryPageState extends State<DiaryPage> {
   late Map schedule = {};
-  final List<String> _items = [
-    'октябрь',
-  ];
   final List _keys = [];
   @override
   void initState() {
@@ -26,6 +25,7 @@ class _DiaryPageState extends State<DiaryPage> {
         setState(() {
           schedule = value;
           _keys.addAll(schedule.keys);
+          _keys.sort(((a, b) => int.parse(b).compareTo(int.parse(a))));
         });
       },
     );
@@ -77,49 +77,24 @@ class _DiaryPageState extends State<DiaryPage> {
         const SizedBox(
           height: 10,
         ),
-        Container(
-          height: 44,
-          width: MediaQuery.of(context).size.width - 54,
-          decoration: BoxDecoration(
-              color: Colors.transparent,
-              border: Border.all(color: CustomColors.indigo),
-              borderRadius: const BorderRadius.all(Radius.circular(10))),
-          child: Padding(
-            padding: const EdgeInsets.only(left: 12),
-            child: DropdownButton(
-              value: _items[0],
-              isExpanded: true,
-              elevation: 2,
-              icon: const Padding(
-                padding: EdgeInsets.symmetric(horizontal: 10),
-                child: Icon(Icons.keyboard_arrow_down_sharp),
-              ),
-              underline: const SizedBox(),
-              items: _items.map((value) {
-                return DropdownMenuItem(
-                  value: value,
-                  child: Text(value),
-                );
-              }).toList(),
-              onChanged: (value) {},
-            ),
-          ),
-        ),
         _keys.isNotEmpty
             ? Row(
                 children: [
                   const SizedBox(
-                    width: 35,
+                    width: 20,
                   ),
-                  Text(
-                    'Дата',
-                    style: TextStyle(
-                        color: CustomColors.hintTextField,
-                        fontWeight: FontWeight.normal,
-                        fontSize: 14),
+                  SizedBox(
+                    width: 45,
+                    child: Text(
+                      'Дата',
+                      style: TextStyle(
+                          color: CustomColors.hintTextField,
+                          fontWeight: FontWeight.normal,
+                          fontSize: 14),
+                    ),
                   ),
                   const SizedBox(
-                    width: 28,
+                    width: 30,
                   ),
                   Text(
                     'Оценки',
@@ -147,192 +122,31 @@ class _DiaryPageState extends State<DiaryPage> {
           height: 20,
         ),
         _keys.isNotEmpty
-            ? Row(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  const SizedBox(
-                    width: 34,
-                  ),
-                  Text(
-                    '11.10',
-                    style: TextStyle(
-                        color: CustomColors.indigo,
-                        fontWeight: FontWeight.normal,
-                        fontSize: 16),
-                  ),
-                  const SizedBox(
-                    width: 16,
-                  ),
-                  Container(
-                    height: 50,
-                    width: 2,
-                    color: CustomColors.gray,
-                  ),
-                  const SizedBox(
-                    width: 16,
-                  ),
-                  Container(
-                    height: 50,
-                    width: 50,
-                    decoration: BoxDecoration(
-                        color: CustomColors.orange,
-                        borderRadius:
-                            const BorderRadius.all(Radius.circular(10))),
-                    child: Center(
-                        child: Text(
-                      '5',
-                      style: TextStyle(
-                          color: CustomColors.white,
-                          fontWeight: FontWeight.normal,
-                          fontSize: 24),
-                    )),
-                  ),
-                  const SizedBox(
-                    width: 42,
-                  ),
-                  Container(
-                    height: 45,
-                    width: 45,
-                    decoration: BoxDecoration(
-                        shape: BoxShape.circle,
-                        image:
-                            DecorationImage(image: NetworkImage(Utils.coin))),
-                  ),
-                  Container(
-                    height: 45,
-                    width: 45,
-                    decoration: BoxDecoration(
-                        shape: BoxShape.circle,
-                        image:
-                            DecorationImage(image: NetworkImage(Utils.coin))),
-                  ),
-                ],
+            ? ListView.builder(
+                physics: const BouncingScrollPhysics(),
+                shrinkWrap: true,
+                itemBuilder: (context, index) {
+                  return ListView.builder(
+                    shrinkWrap: true,
+                    physics: const NeverScrollableScrollPhysics(),
+                    itemBuilder: (context, ind) {
+                      List temp = schedule[_keys[index]].keys.toList();
+                      temp.sort((a, b) => int.parse(a).compareTo(int.parse(b)));
+                      return schedule[_keys[index]][temp[ind]]['child']
+                                  [Utils.userId]['mark'] !=
+                              -1
+                          ? buildMark(schedule[_keys[index]][temp[ind]])
+                          : const SizedBox();
+                    },
+                    itemCount: schedule[_keys[index]].keys.length,
+                  );
+                },
+                itemCount: _keys.length,
               )
             : const SizedBox(),
         const SizedBox(
           height: 20,
         ),
-        _keys.isNotEmpty
-            ? Row(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  const SizedBox(
-                    width: 29,
-                  ),
-                  Text(
-                    '16.10',
-                    style: TextStyle(
-                        color: CustomColors.indigo,
-                        fontWeight: FontWeight.normal,
-                        fontSize: 16),
-                  ),
-                  const SizedBox(
-                    width: 16,
-                  ),
-                  Container(
-                    height: 50,
-                    width: 2,
-                    color: CustomColors.gray,
-                  ),
-                  const SizedBox(
-                    width: 16,
-                  ),
-                  Container(
-                    height: 50,
-                    width: 50,
-                    decoration: BoxDecoration(
-                        color: CustomColors.orange,
-                        borderRadius:
-                            const BorderRadius.all(Radius.circular(10))),
-                    child: Center(
-                        child: Text(
-                      '5',
-                      style: TextStyle(
-                          color: CustomColors.white,
-                          fontWeight: FontWeight.normal,
-                          fontSize: 24),
-                    )),
-                  ),
-                  const SizedBox(
-                    width: 42,
-                  ),
-                  Container(
-                    height: 45,
-                    width: 45,
-                    decoration: BoxDecoration(
-                        shape: BoxShape.circle,
-                        image:
-                            DecorationImage(image: NetworkImage(Utils.coin))),
-                  ),
-                  Container(
-                    height: 45,
-                    width: 45,
-                    decoration: BoxDecoration(
-                        shape: BoxShape.circle,
-                        image:
-                            DecorationImage(image: NetworkImage(Utils.coin))),
-                  ),
-                ],
-              )
-            : const SizedBox(),
-        const SizedBox(
-          height: 20,
-        ),
-        _keys.isNotEmpty
-            ? Row(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  const SizedBox(
-                    width: 25,
-                  ),
-                  Text(
-                    '25.10',
-                    style: TextStyle(
-                        color: CustomColors.indigo,
-                        fontWeight: FontWeight.normal,
-                        fontSize: 16),
-                  ),
-                  const SizedBox(
-                    width: 16,
-                  ),
-                  Container(
-                    height: 50,
-                    width: 2,
-                    color: CustomColors.gray,
-                  ),
-                  const SizedBox(
-                    width: 16,
-                  ),
-                  Container(
-                    height: 50,
-                    width: 50,
-                    decoration: BoxDecoration(
-                        color: CustomColors.orange100,
-                        borderRadius:
-                            const BorderRadius.all(Radius.circular(10))),
-                    child: Center(
-                        child: Text(
-                      '4',
-                      style: TextStyle(
-                          color: CustomColors.white,
-                          fontWeight: FontWeight.normal,
-                          fontSize: 24),
-                    )),
-                  ),
-                  const SizedBox(
-                    width: 42,
-                  ),
-                  Container(
-                    height: 45,
-                    width: 45,
-                    decoration: BoxDecoration(
-                        shape: BoxShape.circle,
-                        image:
-                            DecorationImage(image: NetworkImage(Utils.coin))),
-                  ),
-                ],
-              )
-            : const SizedBox()
       ]),
       bottomNavigationBar: Container(
         height: 80,
@@ -393,6 +207,80 @@ class _DiaryPageState extends State<DiaryPage> {
           ),
         ),
       ), //TODO: Поменять иконки
+    );
+  }
+
+  Widget buildMark(Map lesson) {
+    return Row(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        const SizedBox(
+          width: 20,
+        ),
+        SizedBox(
+          width: 45,
+          child: Text(
+            DateFormat('d.M\nHH:mm').format(
+                DateTime.fromMillisecondsSinceEpoch(lesson['from'] * 1000)),
+            style: TextStyle(
+                color: CustomColors.indigo,
+                fontWeight: FontWeight.normal,
+                fontSize: 16),
+          ),
+        ),
+        const SizedBox(
+          width: 16,
+        ),
+        Container(
+          height: 50,
+          width: 2,
+          color: CustomColors.gray,
+        ),
+        const SizedBox(
+          width: 16,
+        ),
+        Container(
+          height: 50,
+          width: 50,
+          decoration: BoxDecoration(
+              color: CustomColors.orange,
+              borderRadius: const BorderRadius.all(Radius.circular(10))),
+          child: Center(
+              child: Text(
+            lesson['child'][Utils.userId]['mark'] == 1
+                ? "Н"
+                : lesson['child'][Utils.userId]['mark'].toString(),
+            style: TextStyle(
+                color: CustomColors.white,
+                fontWeight: FontWeight.normal,
+                fontSize: 24),
+          )),
+        ),
+        const SizedBox(
+          width: 42,
+        ),
+        SizedBox(
+          height: 45,
+          child: ListView.builder(
+              scrollDirection: Axis.horizontal,
+              shrinkWrap: true,
+              physics: const NeverScrollableScrollPhysics(),
+              itemCount: lesson['child'][Utils.userId]['mark'] == 5
+                  ? 2
+                  : lesson['child'][Utils.userId]['mark'] == 4
+                      ? 1
+                      : 0,
+              itemBuilder: (context, ind) {
+                return Container(
+                  height: 45,
+                  width: 45,
+                  decoration: BoxDecoration(
+                      shape: BoxShape.circle,
+                      image: DecorationImage(image: NetworkImage(Utils.coin))),
+                );
+              }),
+        ),
+      ],
     );
   }
 }

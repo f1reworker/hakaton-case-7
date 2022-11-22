@@ -55,6 +55,8 @@ dev_dependencies:
   email_validator: ^2.1.17
   image_picker: ^0.8.6
   flutter_svg: ^1.1.6
+  video_player: ^2.4.7
+  tiktoklikescroller: ^0.2.3
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec

@@ -2,6 +2,7 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:hakaton_case_7/back/auth.dart';
+import 'package:hakaton_case_7/back/get_type.dart';
 import 'package:hakaton_case_7/back/utils.dart';
 import 'package:hakaton_case_7/front/screens/first_screens/main_page.dart';
 import 'package:hakaton_case_7/front/theme/colors.dart';
@@ -208,6 +209,10 @@ class _SignInPageState extends State<SignInPage> {
                                   await SharedPreferences.getInstance();
                               await prefs.setString('userId', value);
                               Utils.userId = value;
+                              String type = await get_type();
+                              Utils.type = type;
+                              await prefs.setString('type', type);
+                              // ignore: use_build_context_synchronously
                               Navigator.pushReplacement(
                                   context,
                                   PageRouteBuilder(

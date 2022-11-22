@@ -1,9 +1,10 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:hakaton_case_7/back/get_schedule.dart';
+import 'package:hakaton_case_7/back/get_teacher_schedule.dart';
 import 'package:hakaton_case_7/front/screens/first_screens/main_page.dart';
 import 'package:hakaton_case_7/front/theme/colors.dart';
 import 'package:hakaton_case_7/front/theme/my_todo_icons.dart';
+// ignore: depend_on_referenced_packages
 import 'package:intl/intl.dart';
 
 class TeacherPage extends StatefulWidget {
@@ -18,10 +19,18 @@ class TeacherPage extends StatefulWidget {
 
 class _TeacherPageState extends State<TeacherPage> {
   late Map schedule = {};
-  final String key = '${DateTime.now().day}:${DateTime.now().month}';
+  final String key = (DateTime(DateTime.now().year, DateTime.now().month,
+                  DateTime.now().day, 3)
+              .millisecondsSinceEpoch /
+          1000)
+      .ceil()
+      .toString();
   @override
   void initState() {
-    get_schedule(widget.teacherId).then((value) {
+    get_teacher_schedule(
+      widget.teacherId,
+      widget.teacherId,
+    ).then((value) {
       setState(() {
         schedule = value;
       });
@@ -123,9 +132,13 @@ class _TeacherPageState extends State<TeacherPage> {
                       shrinkWrap: true,
                       physics: const NeverScrollableScrollPhysics(),
                       itemCount: schedule[key].length,
-                      itemBuilder: (BuildContext context, int index) =>
-                          buildLesson(
-                              context, index == 0, schedule[key][index]))
+                      itemBuilder: (BuildContext context, int index) {
+                        List temp = schedule[key].keys.toList();
+                        temp.sort(
+                            (a, b) => int.parse(a).compareTo(int.parse(b)));
+                        return buildLesson(
+                            context, index == 0, schedule[key][temp[index]]);
+                      })
             ],
           ),
         ],
@@ -198,16 +211,19 @@ class _TeacherPageState extends State<TeacherPage> {
       child: SizedBox(
         height: 80,
         child: Row(crossAxisAlignment: CrossAxisAlignment.start, children: [
-          Text(
-              DateFormat('HH:MM')
-                  .format(DateTime.fromMillisecondsSinceEpoch(
-                      lesson['from'] * 1000))
-                  .toString(),
-              style: TextStyle(
-                fontSize: 16,
-                fontWeight: FontWeight.normal,
-                color: first ? CustomColors.orange : CustomColors.indigo,
-              )),
+          SizedBox(
+            width: 45,
+            child: Text(
+                DateFormat('HH:mm')
+                    .format(DateTime.fromMillisecondsSinceEpoch(
+                        lesson['from'] * 1000))
+                    .toString(),
+                style: TextStyle(
+                  fontSize: 16,
+                  fontWeight: FontWeight.normal,
+                  color: first ? CustomColors.orange : CustomColors.indigo,
+                )),
+          ),
           const SizedBox(
             width: 7,
           ),
@@ -221,7 +237,7 @@ class _TeacherPageState extends State<TeacherPage> {
           ),
           Container(
             height: 80,
-            width: MediaQuery.of(context).size.width - 113,
+            width: MediaQuery.of(context).size.width - 125,
             decoration: BoxDecoration(
               borderRadius: const BorderRadius.all(Radius.circular(16)),
               color: first ? CustomColors.orange : CustomColors.gray,
